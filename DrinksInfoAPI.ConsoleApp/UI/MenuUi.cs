@@ -1,7 +1,4 @@
-using System.Text.Json;
 using DrinksInfoAPI.ConsoleApp.Controllers;
-using DrinksInfoAPI.ConsoleApp.Models;
-using DrinksInfoAPI.ConsoleApp.Services;
 using Spectre.Console;
 
 namespace DrinksInfoAPI.ConsoleApp.UI;
@@ -11,6 +8,7 @@ internal class MenuUi()
     private readonly CocktailController _cocktailController = new CocktailController();
     private readonly IngredientController _ingredientController = new IngredientController();
 
+    #region Show_Menu_Method()
     internal static int ShowMenu()
     {
         AnsiConsole .MarkupLine("[bold yellow]🍹 Welcome to the Drinks Menu App![/]");
@@ -35,7 +33,9 @@ internal class MenuUi()
 
         return choices.FirstOrDefault(x => x.Value == choice).Key;
     }
+    #endregion
 
+    #region User_Choice_Method
     internal void UserChoice(int choiceNumber)
     {
         switch (choiceNumber)
@@ -68,8 +68,9 @@ internal class MenuUi()
                 break;
         }
     }
-    
-    
+    #endregion
+
+    #region Exit_Application_Method
     private static void ExitApplication()
     {
         Console.Clear();
@@ -77,5 +78,5 @@ internal class MenuUi()
         Console.ReadKey();
         Environment.Exit(0);
     }
-    
+    #endregion
 }
