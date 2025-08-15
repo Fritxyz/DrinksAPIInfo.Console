@@ -7,6 +7,7 @@ internal class ApiService :  IApiService
 {
     private readonly HttpClient _httpClient = new();
 
+    #region Get_Data_Async_Method
     public async Task<T> GetDataAsync<T>(string url)
     {
         var response = await _httpClient.GetAsync(url);
@@ -17,4 +18,6 @@ internal class ApiService :  IApiService
         
         return result;
     }
+    #endregion
+    
 }
