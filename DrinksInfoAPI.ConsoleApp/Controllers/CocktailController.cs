@@ -21,33 +21,7 @@ internal class CocktailController()
         }
 
         string url = $"https://www.thecocktaildb.com/api/json/v1/1/search.php?s={cocktailName}";
-        
-        try
-        {
-            var response = _apiService.GetDataAsync<CocktailResponse>(url);
-            var cocktails = response?.Result.Cocktails;
-
-            if (cocktails == null || cocktails.Count == 0)
-                AnsiConsole.MarkupLine($"[red]No drinks found with keyword: {cocktailName}[/]");
-            else
-                TableView.GenerateTable(cocktails);
-        }
-        catch (HttpRequestException)
-        {
-            AnsiConsole.MarkupLine("[red]Failed to reach the API. Check your internet connection.[/]");
-        }
-        catch (JsonException)
-        {
-            AnsiConsole.MarkupLine("[red]Something went wrong while processing the data.[/]");
-        }
-        catch (Exception ex)
-        {
-            AnsiConsole.MarkupLine($"[red]Unexpected error: {ex.Message}[/]");
-        }
-        
-        AnsiConsole.Write("Press any key to continue.");
-        Console.ReadKey();
-        Console.Clear();
+        FetchAndDisplay(url, $"No drinks found with keyword: {cocktailName}");
     }
     #endregion
 
@@ -55,7 +29,6 @@ internal class CocktailController()
     internal void ListAllCocktailsByFirstLetter()
     {
         char letter = AnsiConsole.Ask<char>("\nPlease enter the first letter or press 0 to cancel the search: "); 
-        
         if (letter == '0')
         {
             Console.Clear();
@@ -63,33 +36,7 @@ internal class CocktailController()
         }
 
         string url = $"https://www.thecocktaildb.com/api/json/v1/1/search.php?f={letter}";
-        
-        try
-        {
-            var response = _apiService.GetDataAsync<CocktailResponse>(url);
-            var cocktails = response?.Result.Cocktails;
-
-            if (cocktails == null || cocktails.Count == 0)
-                AnsiConsole.MarkupLine($"[red]No drinks found with letter: {letter}[/]");
-            else
-                TableView.GenerateTable(cocktails);
-        }
-        catch (HttpRequestException)
-        {
-            AnsiConsole.MarkupLine("[red]Failed to reach the API. Check your internet connection.[/]");
-        }
-        catch (JsonException)
-        {
-            AnsiConsole.MarkupLine("[red]Something went wrong while processing the data.[/]");
-        }
-        catch (Exception ex)
-        {
-            AnsiConsole.MarkupLine($"[red]Unexpected error: {ex.Message}[/]");
-        }
-        
-        AnsiConsole.Write("Press any key to continue.");
-        Console.ReadKey();
-        Console.Clear();
+        FetchAndDisplay(url, $"No drinks found with keyword: {letter}");
     }
     #endregion
     
@@ -104,33 +51,7 @@ internal class CocktailController()
         }
 
         string url = $"https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i={cocktailId}";
-        
-        try
-        {
-            var response = _apiService.GetDataAsync<CocktailResponse>(url);
-            var cocktail = response?.Result.Cocktails;
-
-            if (cocktail == null || cocktail.Count == 0)
-                AnsiConsole.MarkupLine($"[red]No drinks found with keyword: {cocktailId}[/]");
-            else
-                TableView.GenerateTable(cocktail);
-        }
-        catch (HttpRequestException)
-        {
-            AnsiConsole.MarkupLine("[red]Failed to reach the API. Check your internet connection.[/]");
-        }
-        catch (JsonException)
-        {
-            AnsiConsole.MarkupLine("[red]Something went wrong while processing the data.[/]");
-        }
-        catch (Exception ex)
-        {
-            AnsiConsole.MarkupLine($"[red]Unexpected error: {ex.Message}[/]");
-        }
-        
-        AnsiConsole.Write("Press any key to continue.");
-        Console.ReadKey();
-        Console.Clear();
+        FetchAndDisplay(url, $"No drinks found with keyword: {cocktailId}");
     }
     #endregion
 
@@ -138,32 +59,7 @@ internal class CocktailController()
     internal void LookupARandomCocktail()
     {
         string url = "https://www.thecocktaildb.com/api/json/v1/1/random.php";
-        try
-        {
-            var response = _apiService.GetDataAsync<CocktailResponse>(url);
-            var cocktail = response?.Result.Cocktails;
-
-            if (cocktail == null || cocktail.Count == 0)
-                AnsiConsole.MarkupLine($"[red]No drinks found");
-            else
-                TableView.GenerateTable(cocktail);
-        }
-        catch (HttpRequestException)
-        {
-            AnsiConsole.MarkupLine("[red]Failed to reach the API. Check your internet connection.[/]");
-        }
-        catch (JsonException)
-        {
-            AnsiConsole.MarkupLine("[red]Something went wrong while processing the data.[/]");
-        }
-        catch (Exception ex)
-        {
-            AnsiConsole.MarkupLine($"[red]Unexpected error: {ex.Message}[/]");
-        }
-        
-        AnsiConsole.Write("Press any key to continue.");
-        Console.ReadKey();
-        Console.Clear();
+        FetchAndDisplay(url, $"No drinks found");
     }
     #endregion
 
@@ -171,7 +67,6 @@ internal class CocktailController()
     internal void SearchByIngredient()
     {
         string ingredient = AnsiConsole.Ask<string>("\nPlease enter the ingredient or press 0 to cancel the search:");
-
         if (ingredient == "0")
         {
             Console.Clear();
@@ -179,14 +74,20 @@ internal class CocktailController()
         }
 
         string url = $"https://www.thecocktaildb.com/api/json/v1/1/filter.php?i={ingredient}";
-        
+        FetchAndDisplay(url, $"No drinks found with keyword: {ingredient}");
+    }
+    #endregion
+
+    #region Fetch_And_Display_Method
+    private void FetchAndDisplay(string url, string noResultsMessage)
+    {
         try
         {
-            var response = _apiService.GetDataAsync<CocktailResponse>(url);
-            var cocktails = response?.Result.Cocktails;
+            var response = _apiService.GetDataAsync<CocktailResponse>(url).Result;
+            var cocktails = response?.Cocktails;
             
-            if (cocktails == null || cocktails.Count == 0)
-                AnsiConsole.MarkupLine($"[red]No drinks found");
+            if(cocktails == null || cocktails.Count == 0)
+                AnsiConsole.MarkupLine($"[red]{noResultsMessage}[/]");
             else
                 TableView.GenerateTable(cocktails);
         }
@@ -202,7 +103,14 @@ internal class CocktailController()
         {
             AnsiConsole.MarkupLine($"[red]Unexpected error: {ex.Message}[/]");
         }
-        
+
+        PauseAndClear();
+    }
+    #endregion
+
+    #region Pause_And_Clear_Method
+    private void PauseAndClear()
+    {
         AnsiConsole.Write("Press any key to continue.");
         Console.ReadKey();
         Console.Clear();
