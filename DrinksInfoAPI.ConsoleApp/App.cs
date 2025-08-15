@@ -10,9 +10,8 @@ internal class App
     {
         while (true)
         {
-            int choiceNumber = _ui.ShowMenu();
+            int choiceNumber = MenuUi.ShowMenu();
             _ui.UserChoice(choiceNumber);
-            
         }
     }
 }

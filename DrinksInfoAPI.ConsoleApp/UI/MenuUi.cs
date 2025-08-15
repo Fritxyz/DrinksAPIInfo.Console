@@ -11,7 +11,7 @@ internal class MenuUi()
     private readonly CocktailController _cocktailController = new CocktailController();
     private readonly IngredientController _ingredientController = new IngredientController();
 
-    internal int ShowMenu()
+    internal static int ShowMenu()
     {
         AnsiConsole .MarkupLine("[bold yellow]🍹 Welcome to the Drinks Menu App![/]");
         
@@ -58,11 +58,19 @@ internal class MenuUi()
             case 5:
                 _ingredientController.LookupIngredientById();
                 break;
+            case 6:
+                _cocktailController.LookupARandomCocktail();
+                break;
+            case 7:
+                _cocktailController.SearchByIngredient();
+                break;
+            default:
+                break;
         }
     }
     
     
-    private void ExitApplication()
+    private static void ExitApplication()
     {
         Console.Clear();
         AnsiConsole .MarkupLine("[bold yellow]🍹Thank you for using the application. Press any key to exit[/]");

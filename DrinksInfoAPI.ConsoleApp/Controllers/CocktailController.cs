@@ -133,4 +133,79 @@ internal class CocktailController()
         Console.Clear();
     }
     #endregion
+
+    #region Lookup_Random_Cocktail_Method
+    internal void LookupARandomCocktail()
+    {
+        string url = "https://www.thecocktaildb.com/api/json/v1/1/random.php";
+        try
+        {
+            var response = _apiService.GetDataAsync<CocktailResponse>(url);
+            var cocktail = response?.Result.Cocktails;
+
+            if (cocktail == null || cocktail.Count == 0)
+                AnsiConsole.MarkupLine($"[red]No drinks found");
+            else
+                TableView.GenerateTable(cocktail);
+        }
+        catch (HttpRequestException)
+        {
+            AnsiConsole.MarkupLine("[red]Failed to reach the API. Check your internet connection.[/]");
+        }
+        catch (JsonException)
+        {
+            AnsiConsole.MarkupLine("[red]Something went wrong while processing the data.[/]");
+        }
+        catch (Exception ex)
+        {
+            AnsiConsole.MarkupLine($"[red]Unexpected error: {ex.Message}[/]");
+        }
+        
+        AnsiConsole.Write("Press any key to continue.");
+        Console.ReadKey();
+        Console.Clear();
+    }
+    #endregion
+
+    #region Search_By_Ingredient_Method
+    internal void SearchByIngredient()
+    {
+        string ingredient = AnsiConsole.Ask<string>("\nPlease enter the ingredient or press 0 to cancel the search:");
+
+        if (ingredient == "0")
+        {
+            Console.Clear();
+            return;
+        }
+
+        string url = $"https://www.thecocktaildb.com/api/json/v1/1/filter.php?i={ingredient}";
+        
+        try
+        {
+            var response = _apiService.GetDataAsync<CocktailResponse>(url);
+            var cocktails = response?.Result.Cocktails;
+            
+            if (cocktails == null || cocktails.Count == 0)
+                AnsiConsole.MarkupLine($"[red]No drinks found");
+            else
+                TableView.GenerateTable(cocktails);
+        }
+        catch (HttpRequestException)
+        {
+            AnsiConsole.MarkupLine("[red]Failed to reach the API. Check your internet connection.[/]");
+        }
+        catch (JsonException)
+        {
+            AnsiConsole.MarkupLine("[red]Something went wrong while processing the data.[/]");
+        }
+        catch (Exception ex)
+        {
+            AnsiConsole.MarkupLine($"[red]Unexpected error: {ex.Message}[/]");
+        }
+        
+        AnsiConsole.Write("Press any key to continue.");
+        Console.ReadKey();
+        Console.Clear();
+    }
+    #endregion
 }
