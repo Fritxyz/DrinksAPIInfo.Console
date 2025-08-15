@@ -5,9 +5,10 @@ namespace DrinksInfoAPI.ConsoleApp.Views;
 
 internal static class TableView
 {
+    #region Generate_Table_Method
     internal static void GenerateTable<T>(IEnumerable<T> response)
     {
-        Table table = new Table();
+        var table = new Table();
         var properties = typeof(T).GetProperties();
         
         var nonEmptyProperties = properties
@@ -35,4 +36,5 @@ internal static class TableView
         
         AnsiConsole.Write(table);
     }
+    #endregion
 }
